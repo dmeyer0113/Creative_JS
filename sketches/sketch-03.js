@@ -5,16 +5,16 @@ const random = require('canvas-sketch-util/random');
 const math = require('canvas-sketch-util/math');
 
 const settings = {
-  dimensions: [ 1080, 1080 ],
+  dimensions: [720, 720],
   animate: true
 };
 
 const sketch = ({ context, width, height }) => {
   const agents = [];
   //creates array of agents at random x and y pos where i is number of agents
-  for (let i = 0; i < 50; i++) {
-    const x = random.range(0, width);
-    const y = random.range(0, height);
+  for (let i = 0; i < 25; i++) {
+    const x = random.range(345, 375);
+    const y = random.range(350, 370);
     agents.push(new Agent(x, y));
   }
 
@@ -30,8 +30,8 @@ const sketch = ({ context, width, height }) => {
         const other = agents[j];
         const dist = agent.pos.getDistance(other.pos);
         //draws line between agents if dist conditional met
-        if (dist < 225) {
-          context.lineWidth = math.mapRange(dist, 0, 225, 10, 0.5);
+        if (dist > 100 && dist < 300) {
+          context.lineWidth = math.mapRange(dist, 0, 225, 0.5, 0.5);
           context.beginPath();
           context.moveTo(agent.pos.x, agent.pos.y);
           context.lineTo(other.pos.x, other.pos.y);
@@ -57,7 +57,7 @@ canvasSketch(sketch, settings);
 class Vector {
   constructor(x, y) {
     this.x = x;
-    this.y = y;    
+    this.y = y;
   }
   getDistance(v) {
     const dx = this.x - v.x;
@@ -69,13 +69,13 @@ class Vector {
 class Agent {
   constructor(x, y) {
     this.pos = new Vector(x, y);
-    this.vel = new Vector(random.range(-1, 1), random.range(-1, 1));
-    this.radius = random.range(4, 12);
+    this.vel = new Vector(random.range(-0.5, 0.5), random.range(-0.5, 0.5));
+    this.radius = random.range(4, 8);
   }
 
   bounce(width, height) {
-    if (this.pos.x <= 0 || this.pos.x >= width) this.vel.x *= -1;
-    if (this.pos.y <= 0 || this.pos.y >= height) this.vel.y *= -1;
+    if (this.pos.x <= 10 || this.pos.x >= width) this.vel.x *= -1;
+    if (this.pos.y <= 10 || this.pos.y >= height) this.vel.y *= -1;
   }
 
   //wrap is alternate to bounce - personal preference for bounce
@@ -93,7 +93,7 @@ class Agent {
   draw(context) {
     context.save();
     context.translate(this.pos.x, this.pos.y);
-    context.lineWidth = 4;
+    context.lineWidth = 2;
     context.beginPath();
     context.arc(0, 0, this.radius, 0, Math.PI * 2);
     context.fill();
